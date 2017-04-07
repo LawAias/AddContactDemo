@@ -7,7 +7,7 @@ package com.example.sihuan.contactdemo;
 
 public class SmsInfo {
     private String body;
-    private String date;
+    private long date;
     private int read;
     private String address;
     private int type;
@@ -17,7 +17,7 @@ public class SmsInfo {
 
     }
 
-    public SmsInfo(String body, String date, int read, String address, int type, String service_center) {
+    public SmsInfo(String body, long date, int read, String address, int type, String service_center) {
         this.body = body;
         this.date = date;
         this.read = read;
@@ -34,11 +34,11 @@ public class SmsInfo {
         this.body = body;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

@@ -62,21 +62,21 @@ public class ContactsService {
     }
 
 
-    public void addSms(SmsInfo smsInfo) {
-//        ContentResolver resolver = context.getContentResolver();
-//        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-//        Uri uri = Uri.parse("content://sms/inbox");
-//        ContentProviderOperation op = ContentProviderOperation.newInsert(uri)
-//                .withValue("address",smsInfo.getAddress())
-//                .withValue("body",smsInfo.getBody())
-//                .withValue("date",smsInfo.getDate())
-//                .withValue("type",smsInfo.getType())
-//                .withValue("service_center",smsInfo.getService_center())
-//                .withValue("read",smsInfo.getRead())
-//                .build();
-//        operations.add(op);
-//
-//        resolver.applyBatch("sms", operations);
+    public void  addSms(SmsInfo smsInfo) throws RemoteException, OperationApplicationException {
+        ContentResolver resolver = context.getContentResolver();
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        Uri uri = Uri.parse("content://sms/inbox");
+        ContentProviderOperation op = ContentProviderOperation.newInsert(uri)
+                .withValue("address",smsInfo.getAddress())
+                .withValue("body",smsInfo.getBody())
+                .withValue("date",smsInfo.getDate())
+                .withValue("type",smsInfo.getType())
+                .withValue("service_center",smsInfo.getService_center())
+                .withValue("read",smsInfo.getRead())
+                .build();
+        operations.add(op);
+
+        resolver.applyBatch("sms", operations);
 
 
     }

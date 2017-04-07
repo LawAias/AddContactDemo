@@ -27,9 +27,15 @@
         android:text="添加联系人" />
 
     <Button
+        android:id="@+id/add_call_log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加通话记录" />
+
+    <Button
         android:id="@+id/add_sms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="添加短信"/>
+        android:text="添加短信" />
 
 </LinearLayout>
