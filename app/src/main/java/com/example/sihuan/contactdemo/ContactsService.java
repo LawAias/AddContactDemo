@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 
 import java.util.ArrayList;
@@ -58,6 +59,53 @@ public class ContactsService {
         operations.add(op4);
 
         resolver.applyBatch(ContactsContract.AUTHORITY, operations);
+    }
+
+
+    public void addSms(SmsInfo smsInfo) {
+//        ContentResolver resolver = context.getContentResolver();
+//        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+//        Uri uri = Uri.parse("content://sms/inbox");
+//        ContentProviderOperation op = ContentProviderOperation.newInsert(uri)
+//                .withValue("address",smsInfo.getAddress())
+//                .withValue("body",smsInfo.getBody())
+//                .withValue("date",smsInfo.getDate())
+//                .withValue("type",smsInfo.getType())
+//                .withValue("service_center",smsInfo.getService_center())
+//                .withValue("read",smsInfo.getRead())
+//                .build();
+//        operations.add(op);
+//
+//        resolver.applyBatch("sms", operations);
+
+
+    }
+
+
+    public void insertCallLog(CallLogInfo callLogInfo) throws RemoteException, OperationApplicationException {
+
+
+        ContentResolver resolver = context.getContentResolver();
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        ContentProviderOperation op = ContentProviderOperation.newInsert(CallLog.Calls.CONTENT_URI)
+                .withValue(CallLog.Calls.NUMBER, callLogInfo.getNumber())
+                .withValue(CallLog.Calls.DATE, callLogInfo.getDate())
+                .withValue(CallLog.Calls.DURATION, callLogInfo.getDuration())
+                .withValue(CallLog.Calls.TYPE, callLogInfo.getType())
+                .withValue(CallLog.Calls.NEW, callLogInfo.getUnRead())
+                .build();
+        operations.add(op);
+
+        resolver.applyBatch(CallLog.AUTHORITY, operations);
+
+//        ContentValues values = new ContentValues();
+//        values.put(CallLog.Calls.NUMBER, string);
+//        values.put(CallLog.Calls.DATE, System.currentTimeMillis()+i);
+//        values.put(CallLog.Calls.DURATION, string2);
+//        values.put(CallLog.Calls.TYPE,string3);//未接
+//        values.put(CallLog.Calls.NEW, string4);//0已看1未看
+//
+//        context.getContentResolver().insert(CallLog.Calls.CONTENT_URI, values);
     }
 
 

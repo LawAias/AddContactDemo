@@ -26,4 +26,10 @@
         android:layout_height="wrap_content"
         android:text="添加联系人" />
 
+    <Button
+        android:id="@+id/add_sms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加短信"/>
+
 </LinearLayout>
