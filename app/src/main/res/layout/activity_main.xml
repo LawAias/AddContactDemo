@@ -38,4 +38,11 @@
         android:layout_height="wrap_content"
         android:text="添加短信" />
 
+    <Button
+        android:id="@+id/sms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="申请成为默认的短信应用"/>
+
+
 </LinearLayout>

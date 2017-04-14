@@ -2,11 +2,9 @@ package com.example.sihuan.contactdemo;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -32,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btn;
     private Button addSms;
     private Button addCallLog;
+    private Button sms;
 
     private ContactPerson cp;
 
@@ -43,67 +42,95 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         findViews();
         checkPermission();
-        final ContactsService cs = new ContactsService(this);
-
-        //    获取当前默认的短信应用程序的包名
-
-        final String defaultSmsPkg = Telephony.Sms.getDefaultSmsPackage(this);
-
-//    获取当前系统的包名
-        String mySmsPkg = getPackageName();
-
-//    判断默认的短信应用程序的包名与当前应用是否一致
-        if (!defaultSmsPkg.equals(mySmsPkg)) {
-
-            Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-
-            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, mySmsPkg);
-
-            startActivity(intent);//使用startActivityForResult()更好
-        }
-        addCallLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //                    cs.addSms(new SmsInfo("你好", "20170407", 0, "123456798", 1, "932168545"));
-                try {
-                    cs.insertCallLog(new CallLogInfo("123456789", System.currentTimeMillis() + 1000, "10000", "2", "1"));
-
-                } catch (RemoteException | OperationApplicationException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
+        startService(new Intent(getApplicationContext(), SmsService.class));
+        final String defaultSmsApp = Telephony.Sms.getDefaultSmsPackage(this);
         addSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    cs.addSms(new SmsInfo("你好", System.currentTimeMillis(), 1, "123456789", 1, "987654321"));
-                    Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-                    intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSmsPkg);
-                    startActivity(intent);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (OperationApplicationException e) {
-                    e.printStackTrace();
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("sihuan", "结果是" + ContactsService.getDefaultSmsApp(getPackageName()));
+                    }
+                }).start();
             }
         });
 
-
-        btn.setOnClickListener(new View.OnClickListener() {
+        sms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cp = new ContactPerson(name.getText().toString(), num.getText().toString(), "sh932168545@gmail.com");
-                try {
-                    cs.addContact(cp);
-                    Log.e("sihuan", "addContact");
-                } catch (RemoteException | OperationApplicationException e) {
-                    e.printStackTrace();
-                    Log.e("sihuan", e.toString());
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("sihuan", "结果是" + ContactsService.getDefaultSmsApp(defaultSmsApp));
+                    }
+                }).start();
             }
         });
+//        final ContactsService cs = new ContactsService(this);
+//        //    获取当前默认的短信应用程序的包名
+//        final String defaultSmsPkg = Telephony.Sms.getDefaultSmsPackage(MainActivity.this);
+//
+//        addCallLog.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    cs.insertCallLog(new CallLogInfo("123456789", System.currentTimeMillis() + 1000, "10000", "2", "1"));
+//
+//                } catch (RemoteException | OperationApplicationException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        sms.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //    获取当前系统的包名
+//                String mySmsPkg = getPackageName();
+//                //    判断默认的短信应用程序的包名与当前应用是否一致
+//                if (!defaultSmsPkg.equals(mySmsPkg)) {
+//                    Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+//                    intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, mySmsPkg);
+//                    startActivity(intent);//使用startActivityForResult()更好
+//                    String s = Telephony.Sms.getDefaultSmsPackage(MainActivity.this);
+//                    if (s == defaultSmsPkg) {
+//                        Toast.makeText(MainActivity.this, "1", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//
+//        addSms.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    cs.addSms(new SmsInfo("你好22", System.currentTimeMillis(), 0, "123456789", 1, "987654321"));
+//                    Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+//                    intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSmsPkg);
+//                    startActivity(intent);
+//                } catch (RemoteException e) {
+//                    e.printStackTrace();
+//                } catch (OperationApplicationException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                cp = new ContactPerson(name.getText().toString(), num.getText().toString(), "sh932168545@gmail.com");
+//                try {
+//                    cs.addContact(cp);
+//                    Log.e("sihuan", "addContact");
+//                } catch (RemoteException | OperationApplicationException e) {
+//                    e.printStackTrace();
+//                    Log.e("sihuan", e.toString());
+//                }
+//            }
+//        });
 
     }
 
@@ -113,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         btn = (Button) findViewById(R.id.btn);
         addSms = (Button) findViewById(R.id.add_sms);
         addCallLog = (Button) findViewById(R.id.add_call_log);
+        sms = (Button) findViewById(R.id.sms);
 
     }
 

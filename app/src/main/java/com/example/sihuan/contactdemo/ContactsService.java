@@ -3,6 +3,7 @@ package com.example.sihuan.contactdemo;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
@@ -10,6 +11,8 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 
 import java.util.ArrayList;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 /**
@@ -62,17 +65,17 @@ public class ContactsService {
     }
 
 
-    public void  addSms(SmsInfo smsInfo) throws RemoteException, OperationApplicationException {
+    public void addSms(SmsInfo smsInfo) throws RemoteException, OperationApplicationException {
         ContentResolver resolver = context.getContentResolver();
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         Uri uri = Uri.parse("content://sms/inbox");
         ContentProviderOperation op = ContentProviderOperation.newInsert(uri)
-                .withValue("address",smsInfo.getAddress())
-                .withValue("body",smsInfo.getBody())
-                .withValue("date",smsInfo.getDate())
-                .withValue("type",smsInfo.getType())
-                .withValue("service_center",smsInfo.getService_center())
-                .withValue("read",smsInfo.getRead())
+                .withValue("address", smsInfo.getAddress())
+                .withValue("body", smsInfo.getBody())
+                .withValue("date", smsInfo.getDate())
+                .withValue("type", smsInfo.getType())
+                .withValue("service_center", smsInfo.getService_center())
+                .withValue("read", smsInfo.getRead())
                 .build();
         operations.add(op);
 
@@ -108,5 +111,23 @@ public class ContactsService {
 //        context.getContentResolver().insert(CallLog.Calls.CONTENT_URI, values);
     }
 
+    public static Boolean getDefaultSmsApp(String pkgName) {
+        SmsService.smsSuccess = false;
+        Intent i = new Intent(SmsService.mContext, SmsActivity.class);
+        i.putExtra("packeage_name", pkgName);
+        i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        SmsService.mContext.startActivity(i);
+        synchronized (SmsService.class) {
+            try {
+                while (SmsService.b) {
+                    SmsService.class.wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return SmsService.smsSuccess;
+    }
 
 }
